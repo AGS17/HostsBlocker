@@ -10,7 +10,7 @@ namespace HostsBlocker.Core
 {
     public class FileWorker
     {
-        public static string LoadText(string path = "c:\\Windows\\System32\\drivers\\etc\\hosts")
+        public static string LoadText(string path)
         {
             var result = string.Empty;
             try

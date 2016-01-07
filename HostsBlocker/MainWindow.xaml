@@ -11,26 +11,26 @@
         WindowStartupLocation="CenterScreen" ResizeMode="NoResize" SizeToContent="WidthAndHeight" ShowInTaskbar="False" MaxHeight="800">
     <Grid>
         <StackPanel Orientation="Horizontal">
-            <StackPanel Orientation="Vertical" Width="110" Margin="10">
+            <StackPanel Orientation="Vertical" MinWidth="150" MaxWidth="250" Margin="10">
                 <Button Content="Delete current" Margin="0,0,0,10" Click="DeleteButton_Click" />
                 <CheckBox Name="IsBlockingCheckBox" >
                     <TextBlock>is blocking</TextBlock>
                 </CheckBox>
                 <TextBlock>Title:</TextBlock>
-                <TextBox Name="TitleTextBox" />
+                <TextBox Name="TitleTextBox" ToolTip="Title box"/>
                 <TextBlock>Blocking target:</TextBlock>
-                <TextBox Name="TargetTextBox" />
+                <TextBox Name="TargetTextBox" ToolTip="Target box"/>
                 <TextBlock>Redirect to:</TextBlock>
-                <TextBox Name="RedirectTextBox">0.0.0.0</TextBox>
+                <TextBox Name="RedirectTextBox" ToolTip="Redirect box">0.0.0.0</TextBox>
                 <Button Content="Add new" Margin="0,10,0,10" Click="AddButton_Click" />
                 <TextBlock Name="ErrorTextBlock" Foreground="DarkRed" TextWrapping="Wrap" />
             </StackPanel>
-            <ListBox Name="HostsListBox" ItemsSource="{Binding Hosts}" BorderThickness="0">
+            <ListBox Name="HostsListBox" MinWidth="150" ItemsSource="{Binding Hosts}" BorderThickness="0" SelectionMode="Extended" SelectionChanged="HostsListBox_OnSelectionChanged">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
                             <CheckBox IsChecked="{Binding IsBlocking}" IsEnabled="False">
-                                <TextBlock Text="{Binding Target}" />
+                                <TextBlock Text="{Binding Title}" />
                             </CheckBox>
                         </StackPanel>
                     </DataTemplate>
