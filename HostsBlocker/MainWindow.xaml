@@ -29,8 +29,8 @@
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
-                            <CheckBox IsChecked="{Binding Path=IsBlocking}" IsEnabled="False">
-                                <TextBlock Text="{Binding Path=Target}" />
+                            <CheckBox IsChecked="{Binding IsBlocking}" IsEnabled="False">
+                                <TextBlock Text="{Binding Target}" />
                             </CheckBox>
                         </StackPanel>
                     </DataTemplate>

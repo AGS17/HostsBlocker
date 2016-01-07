@@ -15,6 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using HostsBlocker.Core;
 using HostsBlocker.Models;
+using HostsBlocker.ViewsModels;
 
 namespace HostsBlocker
 {
@@ -23,14 +24,17 @@ namespace HostsBlocker
     /// </summary>
     public partial class MainWindow : Window
     {
-        private HostsModel hosts;
+        private MainWindowViewModel dataViewModel;
 
         public MainWindow()
         {
             this.InitializeComponent();
 
-            this.hosts = HostsConverter.ToHostsModel(FileWorker.LoadText());
-            this.DataContext = this.hosts;
+            this.dataViewModel = new MainWindowViewModel
+            {
+                Hosts = HostsConverter.ToHostsModel(FileWorker.LoadText())
+            };
+            this.DataContext = this.dataViewModel;
         }
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
@@ -55,7 +59,7 @@ namespace HostsBlocker
                 return;
             }
 
-            this.hosts.Add(new HostInfoModel
+            this.dataViewModel.Hosts.Add(new HostInfoModel
             {
                 Comment = this.TitleTextBox.Text,
                 IsBlocking = this.IsBlockingCheckBox.IsChecked.GetValueOrDefault(),
