@@ -2,8 +2,7 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
-/HostsBlocker/bin/Debug
-/HostsBlocker/obj/Debug
+/HostsBlocker/bin
+/HostsBlocker/obj
 /HostsBlocker.sln.DotSettings.user
 /.vs/HostsBlocker/v14/.suo
-/HostsBlocker.sln.DotSettings
