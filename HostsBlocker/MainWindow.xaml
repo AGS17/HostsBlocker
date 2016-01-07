@@ -1,0 +1,41 @@
+﻿<Window x:Class="HostsBlocker.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:HostsBlocker"
+        mc:Ignorable="d"
+        Title="Hosts Blocker"
+        Height="252"
+        Width="350"
+        WindowStartupLocation="CenterScreen" ResizeMode="NoResize" SizeToContent="WidthAndHeight" ShowInTaskbar="False" MaxHeight="800">
+    <Grid>
+        <StackPanel Orientation="Horizontal">
+            <StackPanel Orientation="Vertical" Width="110" Margin="10">
+                <Button Content="Delete current" Margin="0,0,0,10" Click="DeleteButton_Click" />
+                <CheckBox Name="IsBlockingCheckBox" >
+                    <TextBlock>is blocking</TextBlock>
+                </CheckBox>
+                <TextBlock>Title:</TextBlock>
+                <TextBox Name="TitleTextBox" />
+                <TextBlock>Blocking target:</TextBlock>
+                <TextBox Name="TargetTextBox" />
+                <TextBlock>Redirect to:</TextBlock>
+                <TextBox Name="RedirectTextBox">0.0.0.0</TextBox>
+                <Button Content="Add new" Margin="0,10,0,10" Click="AddButton_Click" />
+                <TextBlock Name="ErrorTextBlock" Foreground="DarkRed" TextWrapping="Wrap" />
+            </StackPanel>
+            <ListBox Name="HostsListBox" ItemsSource="{Binding Hosts}" BorderThickness="0">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <CheckBox IsChecked="{Binding Path=IsBlocking}" IsEnabled="False">
+                                <TextBlock Text="{Binding Path=Target}" />
+                            </CheckBox>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </StackPanel>
+    </Grid>
+</Window>
