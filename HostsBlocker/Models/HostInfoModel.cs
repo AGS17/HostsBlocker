@@ -1,8 +1,4 @@
-﻿using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace HostsBlocker.Models
+﻿namespace HostsBlocker.Models
 {
     public class HostInfoModel
     {
