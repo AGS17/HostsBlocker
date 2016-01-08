@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using HostsBlocker.Annotations;
 using HostsBlocker.Core;
@@ -8,14 +9,9 @@ namespace HostsBlocker.ViewsModels
 {
     public sealed class MainWindowViewModel : INotifyPropertyChanged
     {
-        private const string HostsPath = "c:\\Windows\\System32\\drivers\\etc\\hosts";
+        public const string HostsPath = "c:\\Windows\\System32\\drivers\\etc\\hosts";
 
         private HostsModel hosts;
-
-        public MainWindowViewModel()
-        {
-            this.hosts = HostsConverter.ToHostsModel(FileWorker.LoadText(HostsPath));
-        }
 
         public HostsModel Hosts
         {
@@ -25,6 +21,22 @@ namespace HostsBlocker.ViewsModels
                 this.hosts = value;
                 this.OnPropertyChanged(nameof(this.Hosts));
             }
+        }
+
+        private string errorMessage;
+        public string ErrorMessage {
+            get { return this.errorMessage; }
+            set
+            {
+                this.errorMessage = value;
+                this.OnPropertyChanged(nameof(this.ErrorMessage));
+            }
+        }
+
+        public MainWindowViewModel()
+        {
+            this.errorMessage = string.Empty;
+            this.hosts = HostsConverter.ToHostsModel(FileWorker.LoadText(HostsPath));
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

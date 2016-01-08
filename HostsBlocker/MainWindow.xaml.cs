@@ -2,6 +2,7 @@
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
+using HostsBlocker.Core;
 using HostsBlocker.Models;
 using HostsBlocker.ViewsModels;
 
@@ -31,46 +32,36 @@ namespace HostsBlocker
             }
         }
 
-        private string DefaultTextBoxChecker(TextBox target, string regexPattern)
+        private bool DefaultTextBoxChecker(TextBox target, string regexPattern)
         {
-            string result = null;
-
             if (string.IsNullOrWhiteSpace(target.Text))
             {
-                result = $"Fill out the {target.ToolTip}";
+                this.dataViewModel.ErrorMessage = $"Fill out the {target.ToolTip}";
                 target.Focus();
-                return result;
+                return false;
             }
 
             if (!Regex.IsMatch(target.Text, regexPattern))
             {
-                result = $"The {target.ToolTip} is not valid";
+                this.dataViewModel.ErrorMessage = $"The {target.ToolTip} is not valid";
                 target.SelectAll();
                 target.Focus();
-                return result;
+                return false;
             }
 
-            return result;
+            return true;
         }
         private void AddButton_Click(object sender, RoutedEventArgs e)
         {
-            var errorMessage = this.DefaultTextBoxChecker(this.TargetTextBox, @"^([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$");
-            this.ErrorTextBlock.Text = errorMessage;
-            if (errorMessage != null)
+            var item = this.GenerateHostInfo();
+            if (item == null)
                 return;
-
-            errorMessage = this.DefaultTextBoxChecker(this.RedirectTextBox, @"^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$");
-            this.ErrorTextBlock.Text = errorMessage;
-            if (errorMessage != null)
-                return;
-
-            this.dataViewModel.Hosts.Add(new HostInfoModel
+            if (this.dataViewModel.Hosts.Contains(item))
             {
-                Comment = this.TitleTextBox.Text,
-                IsBlocking = this.IsBlockingCheckBox.IsChecked.GetValueOrDefault(),
-                RedirectTo = this.RedirectTextBox.Text,
-                Target = this.TargetTextBox.Text
-            });
+                this.dataViewModel.ErrorMessage = "The item with same Target address is issue";
+                return;
+            }
+            this.dataViewModel.Hosts.Add(item);
         }
 
         private void HostsListBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -82,6 +73,63 @@ namespace HostsBlocker
             this.TitleTextBox.Text = current.Title;
             this.TargetTextBox.Text = current.Target;
             this.RedirectTextBox.Text = current.RedirectTo;
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            var messageBoxResult =
+                MessageBox.Show(
+                    "Do you want to update hosts list?\nYes - save and exit\nNo - exit without saving\nCancel - return",
+                    "What you want?", MessageBoxButton.YesNoCancel);
+            switch (messageBoxResult)
+            {
+                case MessageBoxResult.Yes:
+                    FileWorker.Save(MainWindowViewModel.HostsPath, HostsConverter.ToString(this.dataViewModel.Hosts));
+                    break;
+                case MessageBoxResult.No:
+                    break;
+                case MessageBoxResult.Cancel:
+                    e.Cancel = true;
+                    break;
+            }
+        }
+
+        private HostInfoModel GenerateHostInfo()
+        {
+            if (!this.DefaultTextBoxChecker(this.TargetTextBox, @"^([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$"))
+                return null;
+
+            if (!this.DefaultTextBoxChecker(this.RedirectTextBox, @"^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$"))
+                return null;
+
+            this.dataViewModel.ErrorMessage = null;
+
+            return new HostInfoModel
+            {
+                Comment = this.TitleTextBox.Text,
+                IsBlocking = this.IsBlockingCheckBox.IsChecked.GetValueOrDefault(),
+                RedirectTo = this.RedirectTextBox.Text,
+                Target = this.TargetTextBox.Text
+            };
+        }
+
+        private void UpdateButton_Click(object sender, RoutedEventArgs e)
+        {
+            var item = this.GenerateHostInfo();
+            if (item == null)
+                return;
+            if (this.HostsListBox.SelectedItems.Count > 1)
+            {
+                this.dataViewModel.ErrorMessage = "Has been selected more than 1 item";
+                return;
+            }
+            var updatingItemIndex = this.HostsListBox.SelectedIndex;
+            if (updatingItemIndex < 0 || updatingItemIndex >= this.dataViewModel.Hosts.Count)
+            {
+                this.dataViewModel.ErrorMessage = "Nothing selected";
+                return;
+            }
+            this.dataViewModel.Hosts[updatingItemIndex] = item;
         }
     }
 }

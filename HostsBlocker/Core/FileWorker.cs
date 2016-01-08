@@ -10,7 +10,7 @@ namespace HostsBlocker.Core
 {
     public class FileWorker
     {
-        public static string LoadText(string path)
+        public static String LoadText(string path)
         {
             var result = string.Empty;
             try
@@ -25,6 +25,11 @@ namespace HostsBlocker.Core
                 Console.WriteLine($"The file could not be read: {e.Message}");
             }
             return result;
+        }
+
+        public static void Save(string path, string source)
+        {
+            File.WriteAllText(path, source);
         }
     }
 }

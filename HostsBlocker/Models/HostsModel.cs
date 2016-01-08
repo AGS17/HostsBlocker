@@ -19,12 +19,6 @@ namespace HostsBlocker.Models
             }
         }
 
-        public new void Add(HostInfoModel item)
-        {
-            if (this.Contains(item)) return;
-            base.Add(item);
-        }
-
         public new bool Contains(HostInfoModel item)
         {
             return this.Select(x => x.Target).Contains(item.Target);
