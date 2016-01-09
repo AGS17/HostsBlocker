@@ -2,21 +2,41 @@
 {
     public class HostInfoModel
     {
-        public string Comment { get; set; }
+        public bool IsSelected { get; set; }
+
+        private string title;
+        public string Title
+        {
+            get { return this.title ?? this.Target; }
+            set { this.title = value; }
+        }
+
         public string Target { get; set; }
         public string RedirectTo { get; set; }
         public bool IsBlocking { get; set; }
-
-        public string Title => !string.IsNullOrWhiteSpace(this.Comment) ? this.Comment : this.Target;
-
+        
         public HostInfoModel() { }
 
-        public HostInfoModel(string comment, string target, string redirectTo, bool isBlocking)
+        public HostInfoModel(string title, string target, string redirectTo, bool isBlocking)
         {
-            this.Comment = comment;
+            this.IsSelected = false;
+            this.Title = title;
             this.Target = target;
             this.RedirectTo = redirectTo;
             this.IsBlocking = isBlocking;
+        }
+
+        public HostInfoModel(HostInfoModel hostInfo)
+        {
+            if (hostInfo == null)
+            {
+                return;
+            }
+            this.IsSelected = hostInfo.IsSelected;
+            this.Title = hostInfo.Title;
+            this.Target = hostInfo.Target;
+            this.RedirectTo = hostInfo.RedirectTo;
+            this.IsBlocking = hostInfo.IsBlocking;
         }
     }
 }

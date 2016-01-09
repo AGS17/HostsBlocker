@@ -3,29 +3,38 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:HostsBlocker.ViewModels"
         mc:Ignorable="d"
         Title="Hosts Blocker"
         Height="252"
         Width="350"
         WindowStartupLocation="CenterScreen" ResizeMode="NoResize" SizeToContent="WidthAndHeight" ShowInTaskbar="False" MaxHeight="800" Closing="Window_Closing">
+    <Window.DataContext>
+        <vm:MainWindowViewModel />
+    </Window.DataContext>
     <Grid>
         <StackPanel Orientation="Horizontal">
             <StackPanel Orientation="Vertical" Width="200" Margin="10">
-                <Button Content="Delete selected" Margin="0,0,0,10" Click="DeleteButton_Click" />
-                <CheckBox Name="IsBlockingCheckBox" >
+                <Button Content="Delete selected" Margin="0,0,0,10" Command="{Binding DeleteSelectedCommand}" />
+                <CheckBox IsChecked="{Binding CurrentIsBlocking}">
                     <TextBlock>is blocking</TextBlock>
                 </CheckBox>
                 <TextBlock>Title:</TextBlock>
-                <TextBox Name="TitleTextBox" ToolTip="Title box"/>
+                <TextBox ToolTip="Title box" Text="{Binding CurrentTitle}"/>
                 <TextBlock>Target address:</TextBlock>
-                <TextBox Name="TargetTextBox" ToolTip="Target box"/>
+                <TextBox ToolTip="Target box" Text="{Binding CurrentTarget}"/>
                 <TextBlock>Redirect to:</TextBlock>
-                <TextBox Name="RedirectTextBox" ToolTip="Redirect box">0.0.0.0</TextBox>
-                <Button Content="Update current" Margin="0,10,0,0" Click="UpdateButton_Click" />
-                <Button Content="Add new" Margin="0,10,0,10" Click="AddButton_Click" />
+                <TextBox ToolTip="Redirect box" Text="{Binding CurrentRedirect}" />
+                <Button Content="Update current" Margin="0,10,0,0" Command="{Binding UpdateCurrentCommand}" />
+                <Button Content="Add new" Margin="0,10,0,10" Command="{Binding AddNewCommand}" />
                 <TextBlock Foreground="DarkRed" TextWrapping="Wrap" Text="{Binding ErrorMessage}" />
             </StackPanel>
-            <ListBox Name="HostsListBox" MinWidth="250" ItemsSource="{Binding Hosts}" BorderThickness="0" SelectionMode="Extended" SelectionChanged="HostsListBox_OnSelectionChanged">
+            <ListBox MinWidth="250" ItemsSource="{Binding Hosts}" BorderThickness="0" SelectionMode="Extended" SelectedItem="{Binding SelectedItem}">
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListBoxItem}">
+                        <Setter Property="IsSelected" Value="{Binding IsSelected}"/>
+                    </Style>
+                </ListBox.ItemContainerStyle>
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">

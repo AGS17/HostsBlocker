@@ -56,8 +56,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="ViewsModels\MainWindowViewModel.cs" />
     <Compile Include="Properties\Annotations.cs" />
+    <Compile Include="Utils\BaseViewModel.cs" />
+    <Compile Include="Utils\Commands\BaseSimpleCommand.cs" />
+    <Compile Include="Utils\Commands\SimpleCommand.cs" />
+    <Compile Include="Utils\Commands\SimpleCommandAsync.cs" />
+    <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
